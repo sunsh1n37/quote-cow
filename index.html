@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quote Cow — Professional Quotes Made Easy</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FFFBF5;
+  color: #18181b;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+.hero {
+  padding: 48px 0;
+  display: grid;
+  gap: 32px;
+}
+
+@media (min-width: 850px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}
+
+h1 {
+  font-size: clamp(36px, 7vw, 54px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -1.8px;
+}
+
+h2 {
+  font-weight: 900;
+}
+
+.sub {
+  margin-top: 16px;
+  font-size: 16px;
+  color: #52525b;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  background: #000;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 16px;
+  cursor: pointer;
+  border: 0;
+  text-align: center;
+}
+
+.btn:hover {
+  opacity: .85;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #18181b;
+  border: 1px solid #e4e4e7;
+}
+
+.card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.07);
+  border: 1px solid #e4e4e7;
+}
+
+.small {
+  font-size: 12px;
+  color: #71717a;
+  margin: 8px 0;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin: 12px 0 6px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 13px;
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 8px;
+  outline: none;
+  color: #18181b;
+}
+
+input:focus, textarea:focus {
+  border-color: #18181b;
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.row > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.badge {
+  display: inline-block;
+  background: #f4f4f5;
+  color: #52525b;
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  margin-top: 12px;
+}
+
+.section {
+  padding: 52px 0;
+}
+
+.bg-white {
+  background: #fff;
+  border-top: 1px solid #e4e4e7;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.chat-box {
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 14px;
+  margin-top: 18px;
+}
+
+.grid2 {
+  display: grid;
+  gap: 28px;
+}
+
+@media (min-width: 800px) {
+  .grid2 {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+}
+
+.example {
+  background: #18181b;
+  color: #fff;
+  padding: 24px;
+  border-radius: 20px;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.pricing {
+  background: #000;
+  color: #fff;
+  padding: 56px 0;
+  text-align: center;
+}
+
+.price-cards {
+  display: grid;
+  gap: 14px;
+  max-width: 700px;
+  margin: 32px auto 0;
+  text-align: left;
+}
+
+@media (min-width: 700px) {
+  .price-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.price-card {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #27272a;
+}
+
+.price-card.free {
+  background: #18181b;
+}
+
+.price-card.pro {
+  background: #fff;
+  color: #000;
+}
+
+.price {
+  font-size: 30px;
+  font-weight: 900;
+  margin: 8px 0;
+}
+
+.status {
+  padding: 12px;
+  border-radius: 12px;
+  margin-top: 12px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.status.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.info {
+  background: #f4f4f5;
+  color: #3f3f46;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.preview-box {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #e4e4e7;
+  border-radius: 16px;
+  background: #fafafa;
+}
+
+footer {
+  padding: 28px 20px;
+  text-align: center;
+  color: #71717a;
+  font-size: 12px;
+}
+
+@media (max-width: 420px) {
+  .card {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<section class="container hero">
+
+  <div>
+    <h1>Stop Sending Quotes Like A Hobby. Send Them Like A Business.</h1>
+
+    <p class="sub">
+      Lash techs, nail techs, MUAs, bakers and photographers:
+      create professional quotation PDFs in seconds.
+    </p>
+
+    <a href="#generator" class="btn" style="width:auto;display:inline-block">
+      Generate My First Quote
+    </a>
+
+    <br>
+
+    <span class="badge">No login · Unlimited testing · Mobile friendly</span>
+  </div>
+
+  <div id="generator" class="card">
+
+    <h2>Quote Cow 🐄</h2>
+
+    <p class="small">
+      Create a professional quotation you can download or share.
+    </p>
+
+    <form id="quote-form">
+
+      <label for="biz">Business name *</label>
+      <input id="biz" maxlength="100" placeholder="e.g. Glam by Zinhle" required>
+
+      <label for="client">Client name *</label>
+      <input id="client" maxlength="100" placeholder="e.g. Thandi" required>
+
+      <label for="service">Service description *</label>
+      <textarea id="service" maxlength="3000" rows="3" placeholder="Describe the service, inclusions and travel fees..." required></textarea>
+
+      <div class="row">
+        <div>
+          <label for="price">Total price (R) *</label>
+          <input id="price" type="number" min="0.01" max="100000000" step="0.01" placeholder="650" required>
+        </div>
+
+        <div>
+          <label for="deposit">Deposit (%)</label>
+          <input id="deposit" type="number" min="0" max="100" step="1" value="50" required>
+        </div>
+      </div>
+
+      <label for="bank">Payment details</label>
+      <input id="bank" maxlength="300" placeholder="e.g. Capitec or payment link">
+
+      <label for="contact">Business contact (optional)</label>
+      <input id="contact" maxlength="150" placeholder="Phone number or email">
+
+      <button type="submit" class="btn">
+        Generate Pro Quote PDF
+      </button>
+
+    </form>
+
+    <div id="status" class="status info" role="status" aria-live="polite">
+      Testing mode is ON. Generate as many quotations as you need.
+    </div>
+
+    <div id="preview-box" class="preview-box hidden">
+
+      <h3 style="font-size:16px">Your quotation is ready!</h3>
+
+      <p class="small">
+        Preview your PDF, download it, or share it with your client.
+      </p>
+
+      <button id="open-pdf" type="button" class="btn">
+        Open PDF
+      </button>
+
+      <a id="download-pdf" class="btn btn-secondary" download="Quote.pdf">
+        Download PDF
+      </a>
+
+      <button id="share-pdf" type="button" class="btn btn-secondary">
+        Share PDF
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="bg-white section">
+
+  <div class="container" style="max-width:720px">
+
+    <h2 style="font-size:24px">You know this chat:</h2>
+
+    <div class="chat-box">
+      Client: "How much love?"<br>
+      You: "R450 cc, R100 travel, R200 deposit to Capitec..."<br><br>
+      <span style="color:#71717a">
+        Quote Cow helps turn that conversation into a professional quotation.
+      </span>
+    </div>
+
+    <p style="margin-top:20px;font-weight:700">
+      Make your prices, deposits and booking terms easier to understand.
+    </p>
+
+  </div>
+
+</section>
+
+
+<section class="container section grid2">
+
+  <div>
+    <h2 style="font-size:32px">Meet Quote Cow.</h2>
+
+    <p class="sub">
+      Turn a price enquiry into a professional quotation.
+      Include your services, pricing, deposit and payment details.
+      Download the PDF and send it to your client.
+    </p>
+  </div>
+
+  <div class="example">
+    <span style="opacity:.6">QUOTATION</span><br><br>
+
+    <b style="font-size:19px">GLAM BY ZINHLE</b><br><br>
+
+    For: Thandi M.<br>
+    Quote: QC-20261014-1234<br>
+    Valid for: 48 hours<br><br>
+
+    --------------------------------<br><br>
+
+    Service: Full glam + strip lashes<br><br>
+
+    Total: R650.00<br>
+    Deposit: R325.00<br>
+    Balance: R325.00<br><br>
+
+    Pay: Capitec
+  </div>
+
+</section>
+
+
+<section class="pricing">
+
+  <div class="container">
+
+    <h2 style="font-size:32px">Start free, stay pro.</h2>
+
+    <div class="price-cards">
+
+      <div class="price-card free">
+        <b>Free</b>
+        <div class="price">R0</div>
+        <p style="opacity:.7;font-size:13px">
+          Try Quote Cow and generate quotations.
+        </p>
+      </div>
+
+      <div class="price-card pro">
+        <b>Unlimited</b>
+        <div class="price">R149 / mo</div>
+        <p style="opacity:.7;font-size:13px">
+          Proposed subscription plan. Payment processing is not yet configured.
+        </p>
+        <a href="#generator" class="btn">Try Quote Cow</a>
+      </div>
+
+    </div>
+
+    <p style="margin-top:20px;font-size:11px;opacity:.6">
+      Testing version. No subscriptions or payments are being processed.
+    </p>
+
+  </div>
+
+</section>
+
+
+<footer>
+  Quote Cow · Make every quote count. 🐄
+</footer>
+
+
+<script>
+(function () {
+  "use strict";
+
+  const form = document.getElementById("quote-form");
+  const statusBox = document.getElementById("status");
+  const previewBox = document.getElementById("preview-box");
+  const openButton = document.getElementById("open-pdf");
+  const downloadLink = document.getElementById("download-pdf");
+  const shareButton = document.getElementById("share-pdf");
+
+  let currentBlob = null;
+  let currentUrl = null;
+  let currentFilename = "Quote.pdf";
+
+  function showStatus(message, type) {
+    statusBox.textContent = message;
+    statusBox.className = "status " + type;
+  }
+
+  function money(value) {
+    return "R" + Number(value).toLocaleString("en-ZA", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function makeQuoteNumber() {
+    const date = new Date();
+
+    const datePart =
+      date.getFullYear().toString() +
+      String(date.getMonth() + 1).padStart(2, "0") +
+      String(date.getDate()).padStart(2, "0");
+
+    const randomPart = Math.floor(1000 + Math.random() * 9000);
+
+    return "QC-" + datePart + "-" + randomPart;
+  }
+
+  function safeFilename(name) {
+    const cleaned = name
+      .replace(/[^a-z0-9_-]/gi, "-")
+      .replace(/-+/g, "-")
+      .slice(0, 50);
+
+    return "Quote-" + (cleaned || "Client") + ".pdf";
+  }
+
+  function addWrappedText(doc, text, x, y, maxWidth, lineHeight) {
+    const lines = doc.splitTextToSize(String(text || ""), maxWidth);
+
+    for (let i = 0; i < lines.length; i++) {
+      if (y > 265) {
+        doc.addPage();
+        y = 20;
+      }
+
+      doc.text(lines[i], x, y);
+      y += lineHeight;
+    }
+
+    return y;
+  }
+
+  function createPdf(quote) {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      throw new Error(
+        "The PDF library did not load. Check your internet connection."
+      );
+    }
+
+    const jsPDF = window.jspdf.jsPDF;
+    const doc = new jsPDF();
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const contentWidth = pageWidth - margin * 2;
+
+    let y = 22;
+
+    doc.setFillColor(24, 24, 27);
+    doc.rect(0, 0, pageWidth, 43, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text("QUOTE COW", margin, y);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("PROFESSIONAL QUOTATION", margin, y + 11);
+
+    doc.text(
+      "Quote: " + quote.number,
+      pageWidth - margin,
+      y,
+      { align: "right" }
+    );
+
+    doc.setTextColor(24, 24, 27);
+    y = 56;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(15);
+    y = addWrappedText(doc, quote.biz, margin, y, contentWidth, 7);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    if (quote.contact) {
+      y = addWrappedText(
+        doc,
+        "Contact: " + quote.contact,
+        margin,
+        y + 2,
+        contentWidth,
+        5
+      );
+    }
+
+    y = addWrappedText(
+      doc,
+      "Prepared for: " + quote.client,
+      margin,
+      y + 3,
+      contentWidth,
+      5
+    );
+
+    y = addWrappedText(
+      doc,
+      "Issued: " + quote.issued,
+      margin,
+      y + 2,
+      contentWidth,
+      5
+    );
+
+    y = addWrappedText(
+      doc,
+      "Valid until: " + quote.expiry,
+      margin,
+      y + 2,
+      contentWidth,
+      5
+    );
+
+    y += 7;
+
+    if (y > 250) {
+      doc.addPage();
+      y = 20;
+    }
+
+    doc.setDrawColor(220, 220, 220);
+    doc.line(margin, y, pageWidth - margin, y);
+
+    y += 10;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("SERVICE DESCRIPTION", margin, y);
+
+    y += 8;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    y = addWrappedText(
+      doc,
+      quote.service,
+      margin,
+      y,
+      contentWidth,
+      6
+    );
+
+    y += 8;
+
+    if (y > 230) {
+      doc.addPage();
+      y = 20;
+    }
+
+    doc.setDrawColor(220, 220, 220);
+    doc.line(margin, y, pageWidth - margin, y);
+
+    y += 12;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text("Total quotation", margin, y);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(17);
+
+    doc.text(
+      money(quote.price),
+      pageWidth - margin,
+      y,
+      { align: "right" }
+    );
+
+    y += 12;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    doc.text(
+      "Deposit (" + quote.depositPercent + "%)",
+      margin,
+      y
+    );
+
+    doc.text(
+      money(quote.depositAmount),
+      pageWidth - margin,
+      y,
+      { align: "right" }
+    );
+
+    y += 8;
+
+    doc.text("Remaining balance", margin, y);
+
+    doc.text(
+      money(quote.balance),
+      pageWidth - margin,
+      y,
+      { align: "right" }
+    );
+
+    y += 14;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("PAYMENT DETAILS", margin, y);
+
+    y += 7;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+
+    y = addWrappedText(
+      doc,
+      quote.bank || "Payment details to be confirmed with the business.",
+      margin,
+      y,
+      contentWidth,
+      5
+    );
+
+    y += 10;
+
+    if (y > 255) {
+      doc.addPage();
+      y = 20;
+    }
+
+    doc.setFillColor(250, 250, 245);
+    doc.roundedRect(
+      margin,
+      y,
+      contentWidth,
+      24,
+      3,
+      3,
+      "F"
+    );
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.text("TERMS", margin + 5, y + 7);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+
+    doc.text(
+      "Please confirm booking and payment arrangements with the business.",
+      margin + 5,
+      y + 15
+    );
+
+    doc.setFontSize(8);
+    doc.setTextColor(120, 120, 120);
+
+    doc.text(
+      "Generated with Quote Cow",
+      pageWidth / 2,
+      285,
+      { align: "center" }
+    );
+
+    return doc;
+  }
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const biz = document.getElementById("biz").value.trim();
+    const client = document.getElementById("client").value.trim();
+    const service = document.getElementById("service").value.trim();
+
+    const price = Number(document.getElementById("price").value);
+    const depositPercent = Number(document.getElementById("deposit").value);
+
+    const bank = document.getElementById("bank").value.trim();
+    const contact = document.getElementById("contact").value.trim();
+
+    if (!biz || !client || !service) {
+      showStatus(
+        "Please enter your business name, client name and service.",
+        "error"
+      );
+      return;
+    }
+
+    if (!Number.isFinite(price) || price <= 0 || price > 100000000) {
+      showStatus("Enter a valid price greater than zero.", "error");
+      return;
+    }
+
+    if (
+      !Number.isFinite(depositPercent) ||
+      depositPercent < 0 ||
+      depositPercent > 100
+    ) {
+      showStatus("Deposit must be between 0% and 100%.", "error");
+      return;
+    }
+
+    try {
+      const now = new Date();
+      const expiryDate = new Date(
+        now.getTime() + 48 * 60 * 60 * 1000
+      );
+
+      const dateOptions = {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      };
+
+      const depositAmount =
+        Math.round(price * depositPercent) / 100;
+
+      const quote = {
+        biz: biz,
+        client: client,
+        service: service,
+        price: price,
+        depositPercent: depositPercent,
+        depositAmount: depositAmount,
+        balance: Math.round(price * 100 - price * depositPercent) / 100,
+        bank: bank,
+        contact: contact,
+        number: makeQuoteNumber(),
+        issued: now.toLocaleDateString("en-ZA", dateOptions),
+        expiry: expiryDate.toLocaleDateString("en-ZA", dateOptions)
+      };
+
+      const doc = createPdf(quote);
+
+      currentBlob = doc.output("blob");
+      currentFilename = safeFilename(client);
+
+      if (currentUrl) {
+        URL.revokeObjectURL(currentUrl);
+      }
+
+      currentUrl = URL.createObjectURL(currentBlob);
+
+      downloadLink.href = currentUrl;
+      downloadLink.download = currentFilename;
+
+      previewBox.classList.remove("hidden");
+
+      showStatus(
+        "Success! Your new quotation is ready. Testing mode allows unlimited PDFs.",
+        "success"
+      );
+
+      previewBox.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+
+    } catch (error) {
+      console.error("Quote Cow PDF error:", error);
+
+      showStatus(
+        error.message || "Something went wrong generating your PDF.",
+        "error"
+      );
+    }
+  });
+
+  openButton.addEventListener("click", function () {
+    if (!currentBlob || !currentUrl) {
+      showStatus("Generate a quotation first.", "error");
+      return;
+    }
+
+    const opened = window.open(currentUrl, "_blank");
+
+    if (!opened) {
+      showStatus(
+        "The preview blocked the new tab. Try Download PDF or open Quote Cow in Chrome.",
+        "info"
+      );
+    }
+  });
+
+  shareButton.addEventListener("click", async function () {
+    if (!currentBlob) {
+      showStatus("Generate a quotation first.", "error");
+      return;
+    }
+
+    try {
+      const file = new File(
+        [currentBlob],
+        currentFilename,
+        { type: "application/pdf" }
+      );
+
+      if (
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare({ files: [file] })
+      ) {
+        await navigator.share({
+          title: "Quote Cow quotation",
+          text: "Here is your quotation.",
+          files: [file]
+        });
+      } else {
+        showStatus(
+          "Sharing isn't supported in this preview. Download the PDF and share it from your phone.",
+          "info"
+        );
+      }
+
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        showStatus(
+          "Sharing failed. Try downloading the PDF and sharing it from your phone.",
+          "info"
+        );
+      }
+    }
+  });
+
+  /*
+    TEST MODE:
+    There is deliberately no free-quote counter or two-quote restriction.
+    PDF generation is unlimited while testing.
+  */
+
+  /*
+    Save business information locally on this device.
+  */
+
+  ["biz", "bank", "contact"].forEach(function (id) {
+    const input = document.getElementById(id);
+
+    try {
+      input.value = localStorage.getItem("qc_" + id) || "";
+    } catch (error) {}
+
+    input.addEventListener("change", function () {
+      try {
+        localStorage.setItem("qc_" + id, input.value);
+      } catch (error) {}
+    });
+  });
+
+})();
+</script>
+
+</body>
+  </html>
